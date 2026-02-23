@@ -1,0 +1,20 @@
+designproof-id/
+│
+├── core/
+│   ├── universal_hasher.py
+│   ├── metadata_extractor.py
+│   ├── cad_handler.py
+│   ├── fingerprint.py
+│   └── certificate_generator.py
+│
+├── api/
+│   └── main.py
+│
+├── web/
+│   └── dashboard.html
+│
+├── storage/
+│   └── hashes.json
+│
+├── README.md
+└── requirements.txt
