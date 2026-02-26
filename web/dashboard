@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DesignProof-ID Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f6f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        input[type="file"] {
+            margin: 15px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #1f2937;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #374151;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e5e7eb;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Design Verification Dashboard</h1>
+
+    <input type="file" id="fileInput" />
+    <br>
+    <button onclick="uploadFile()">Verify & Generate Certificate</button>
+
+    <div class="result" id="resultBox" style="display:none;"></div>
+</div>
+
+<script>
+async function uploadFile() {
+    const fileInput = document.getElementById("fileInput");
+    const resultBox = document.getElementById("resultBox");
+
+    if (!fileInput.files.length) {
+        alert("Pilih file terlebih dahulu.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+
+    try {
+        const response = await fetch("http://127.0.0.1:8000/verify/", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        resultBox.style.display = "block";
+        resultBox.innerHTML = `
+            <strong>Status:</strong> ${data.status}<br>
+            <strong>Certificate ID:</strong> ${data.certificate_id}<br>
+            <strong>Certificate Path:</strong> ${data.certificate_path}<br>
+            <strong>Raw SHA256:</strong> ${data.hash.raw_sha256}
+        `;
+    } catch (error) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "Terjadi kesalahan saat mengirim file.";
+    }
+}
+</script>
+
+</body>
+</html>
